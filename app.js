@@ -112,6 +112,17 @@ function getFiles() {
 }
 
 async function main() {
+  if (!fs.existsSync(config.dir)){
+    fs.mkdirSync(config.dir);
+  }
+  
+  const files = getFiles();
+
+  if (files.length == 0) {
+    console.log('Ei löytynyt dumpattavia tiedostoja');
+    return;
+  }
+
   await initBrowser();
 
   const loggedIn = await login(config.username, config.password);
@@ -124,7 +135,6 @@ async function main() {
 
   console.log('Kirjautuminen onnistui.');
 
-  const files = getFiles();
   await page.goto(config.thread);
   await postFiles(files);
 }
